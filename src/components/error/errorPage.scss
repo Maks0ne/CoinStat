@@ -1,0 +1,17 @@
+.error-page {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 20;
+
+  p {
+    font-size: 88px;
+    color: rgba(219, 233, 246, 0.838);
+
+    @media(max-width: 1200px) {
+      font-size: 55px;
+    }
+  }
+}

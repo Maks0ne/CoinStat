@@ -1,0 +1,10 @@
+  .pieChart {
+    width: 400px;
+    height: 400px;
+    position: absolute;
+    top: 50%;
+    margin: 0 30px;
+    @media(max-width: 900px) {
+      display: none;
+    }
+  }

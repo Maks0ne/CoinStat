@@ -1,0 +1,45 @@
+.header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  margin: 20px 40px;
+  gap: 30px;
+
+  p {
+    opacity: 0.4;
+    font-size: 40px;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 1;
+      transition: opacity 1s ease;
+      text-decoration: underline;
+      color: rgb(180, 197, 216);
+    }
+
+    @media (max-width: 2000px) {
+      font-size: 28px;
+    }
+
+    @media (max-width: 1700px) {
+      font-size: 24px;
+    }
+
+    @media (max-width: 1200px) {
+      font-size: 20px;
+    }
+
+    @media (max-width: 500px) {
+      font-size: 18px;
+    }
+
+    @media (max-width: 400px) {
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    gap: 10px;
+  }
+}

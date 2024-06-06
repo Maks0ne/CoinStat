@@ -1,0 +1,50 @@
+.slider-container {
+  padding: 30px;
+}
+
+.slick-list {
+  text-align: center;
+  padding: 0 5px;
+
+  h2 {
+    font-size: 28px;
+    color: rgb(80, 166, 177);
+    padding: 0 5px;
+  }
+
+  p {
+    font-size: 22px;
+    font-style: italic;
+    padding: 0 5px;
+  }
+
+  @media(max-width: 2000px) {
+    h2 {
+      font-size: 22px;
+    }
+
+    p {
+      font-size: 16px;
+    }
+  }
+
+  @media(max-width: 1300px) {
+    h2 {
+      font-size: 14px;
+    }
+
+    p {
+      font-size: 10px;
+    }
+  }
+}
+
+.slick-dots li button::before {
+  color: white;
+  font-size: 5px;
+}
+
+.slick-dots li.slick-active button::before {
+  color: white;
+  font-size: 10px;
+}
