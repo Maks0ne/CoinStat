@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import PieChart from "./pieChart/PieChart";
-import { useHttp } from "../../../hooks/useHttps";
-import { cryptoCurrencyApiResponse } from "../../../config/Api";
+import { useGetCoinsQuery, ICoinsTransformed } from '../../../api/useCryptoApi'
 import { MoveUp } from 'lucide-react';
 import { MoveDown } from 'lucide-react';
 import Spinner from "../../spinner/Spinner";
@@ -9,38 +8,18 @@ import ErrorPage from "../../error/ErrorPage";
 
 import './wallet.scss'
 
-interface ICoins {  // Define the interface for the coin data fetched from the API
-  CoinInfo: {
-    Name: string,
-    FullName: string,
-    ImageUrl: string,
-  },
-  RAW: {
-    USD: {
-      PRICE: number,
-      CHANGE24HOUR: number,
-    }
-  }
-}
-
-export interface ICoinsTransformed {    // Define the transformed coin data interface
-  name: string;
-  fullName: string;
-  imageUrl: string;
-  price: number;
-  change24hour: number;
-  amount?: number
-}
-
 interface IWallet {
   coin: ICoinsTransformed;
   amount: number;
 }
+interface ISelectedCoin extends ICoinsTransformed {
+  amount?: number
+}
 
 const Wallet: FC = () => {
-  const { fetchData, data, loading, error } = useHttp<{ Data: ICoins[] }>(cryptoCurrencyApiResponse);
+  const { data, error, isLoading } = useGetCoinsQuery();
   const [coins, setCoins] = useState<ICoinsTransformed[]>([]);
-  const [selectedCoin, setSelectedCoin] = useState<ICoinsTransformed | null>(null);
+  const [selectedCoin, setSelectedCoin] = useState<ISelectedCoin | null>(null);
   const [inputValue, setInputValue] = useState<number>(0)
   const [purchaseResult, setPurchaseResult] = useState<number>(0);
   const [walletResult, setWalletResult] = useState<IWallet[]>([])
@@ -48,25 +27,11 @@ const Wallet: FC = () => {
   const [isSuccsessModalOpen, setIsSuccsessModalOpen] = useState<boolean>(false)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isSellModalOpen, setIsSellModalOpen] = useState<boolean>(false);
-  const [selectedSellCoin, setSelectedSellCoin] = useState<ICoinsTransformed | null>(null);
-
-  useEffect(() => {
-    fetchData()
-  }, []);
+  const [selectedSellCoin, setSelectedSellCoin] = useState<ISelectedCoin | null>(null);
 
   useEffect(() => {    // Transform fetched data when it changes
     if (data) {
-      const transformData = data.Data.map((coin) => {
-        const obj = {
-          name: coin.CoinInfo.Name,
-          fullName: coin.CoinInfo.FullName,
-          imageUrl: `https://www.cryptocompare.com/media${coin.CoinInfo.ImageUrl}`,
-          price: +coin.RAW.USD.PRICE,
-          change24hour: coin.RAW.USD.CHANGE24HOUR,
-        }
-        return obj
-      })
-      setCoins(transformData)
+      setCoins(data)
     }
   }, [data]);
 
@@ -93,7 +58,6 @@ const Wallet: FC = () => {
   const resultPurchase = () => {
     if (selectedCoin) {
       setPurchaseResult(inputValue);
-
 
       setWalletResult(prev => {
         const existingCoinIndex = prev.findIndex(walletItem => walletItem.coin.name === selectedCoin.name);
@@ -134,12 +98,10 @@ const Wallet: FC = () => {
     }
   }
 
-  const isLoading = loading ? <Spinner /> : null
-  const errorMessage = error ? <ErrorPage /> : null
   return (
     <div className="wallet-content" >
-      {errorMessage}
-      {isLoading}
+      {error && <ErrorPage />}
+      {isLoading && <Spinner />}
 
       {/* Div for BG blur and closing the modal from the outside */}
       <div className={(isModalOpen || isSuccsessModalOpen || isSellModalOpen) ? 'modal-overlay' : ''} onClick={() => (isModalOpen || isSuccsessModalOpen || isSellModalOpen) && closeModal()} >

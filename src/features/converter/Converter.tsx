@@ -1,31 +1,13 @@
 import { FC, useState, useEffect } from "react";
-import { useHttp } from "../../hooks/useHttps";
-import { cryptoCurrencyApiResponse } from "../../config/Api";
+import { useGetCoinsQuery, ICoinsTransformed } from "../../api/useCryptoApi";
 import { ArrowLeftRight } from "lucide-react";
 import Spinner from "../../components/spinner/Spinner";
 import ErrorPage from "../../components/error/ErrorPage";
 
 import './converter.scss'
 
-interface ICoins {
-  CoinInfo: {
-    Name: string,
-    FullName: string,
-  },
-  RAW: {
-    USD: {
-      PRICE: number,
-    }
-  }
-}
-interface ICoinsTransformed {
-  name: string,
-  fullName: string,
-  price: number
-}
-
 const Converter: FC = () => {
-  const { data, error, loading, fetchData } = useHttp<{ Data: ICoins[] }>(cryptoCurrencyApiResponse)
+  const { data, error, isLoading } = useGetCoinsQuery();
   const [coins, setCoins] = useState<ICoinsTransformed[]>([])
   const [firstSelector, setFirstSelector] = useState<number>(0)
   const [secondSelector, setSecondSelector] = useState<number>(0)
@@ -35,29 +17,18 @@ const Converter: FC = () => {
   const [secondSelectorName, setSecondSelectorName] = useState<string>('')
 
   useEffect(() => {
-    fetchData()
-  }, [])
-
-  useEffect(() => {
     if (data) {
-      const transformData = data.Data.map((coin) => {
-        const obj = {
-          name: coin.CoinInfo.Name,
-          fullName: coin.CoinInfo.FullName,
-          price: +coin.RAW.USD.PRICE,
-        }
-        return obj
-      })
-      setCoins(transformData)
+      setCoins(data);
 
-      if (transformData.length > 0) {     //setting selectors after the first load for correct display 
-        setFirstSelector(transformData[0].price)
-        setSecondSelector(transformData[0].price)
-        setFirstSelectorName(transformData[0].name)
-        setSecondSelectorName(transformData[0].name)
+      if (data.length > 0) {
+        const initialCoin = data[0];
+        setFirstSelector(initialCoin.price);
+        setSecondSelector(initialCoin.price);
+        setFirstSelectorName(initialCoin.name);
+        setSecondSelectorName(initialCoin.name);
       }
     }
-  }, [data])
+  }, [data]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {  //getting data from input
     setInputValue(+e.target.value)
@@ -79,21 +50,17 @@ const Converter: FC = () => {
     }
   }, [inputValue, firstSelector, secondSelector])
 
-  const swapSelectors = () => {
-    const selectorValue = firstSelector
-    const selectorNameValue = firstSelectorName
-    setFirstSelector(secondSelector)            //func to replace values of selectors for a button
-    setSecondSelector(selectorValue)
-    setFirstSelectorName(secondSelectorName)
-    setSecondSelectorName(selectorNameValue)
+  const swapSelectors = () => {   //func to replace values of selectors for a button
+    setFirstSelector(secondSelector);
+    setSecondSelector(firstSelector);
+    setFirstSelectorName(secondSelectorName);
+    setSecondSelectorName(firstSelectorName);
   }
 
-  const isLoading = loading ? <Spinner /> : null
-  const errorMessage = error ? <ErrorPage /> : null
   return (
     <div className="calculator">
-      {errorMessage}
-      {isLoading}
+      {error && <ErrorPage />}
+      {isLoading && <Spinner />}
 
       <div className="converter-container">
         <h2>Cryptocurrency Converter</h2>
@@ -123,7 +90,5 @@ const Converter: FC = () => {
     </div>
   )
 };
-
-
 
 export default Converter

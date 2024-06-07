@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from 'react-chartjs-2';
-import { ICoinsTransformed } from "../Wallet";
+import { ICoinsTransformed } from '../../../../api/useCryptoApi'
 
 import './pieChart.scss'
 
@@ -18,7 +18,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const PieChart: FC<IWalletHistoryProps> = ({ wallet }) => {
   const labels = wallet.map(item => item.coin.fullName);
   const dataValues = wallet.map(item => item.amount);
-  
+
   const data = {
     labels,
     datasets: [
