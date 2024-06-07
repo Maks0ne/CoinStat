@@ -30,6 +30,7 @@ interface ICoinsTransformed {
 const CoinsDataTable: FC = () => {
   const { fetchData, data, loading, error } = useHttp<{ Data: ICoins[] }>(cryptoCurrencyApiResponse);
   const [cryptoData, setCryptoData] = useState<ICoinsTransformed[]>([]);
+  
   useEffect(() => {
     fetchData()
     const interval = setInterval(fetchData, 30000);
