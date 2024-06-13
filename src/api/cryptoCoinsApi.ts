@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-interface Coin {
+interface ICoin {
   CoinInfo: {
     Name: string;
     FullName: string;
@@ -22,13 +22,13 @@ export interface ICoinsTransformed {
   change24hour: number;
 }
 
-export const cryptoApi = createApi({
-  reducerPath: 'cryptoApi',
+export const cryptoCoinApi = createApi({
+  reducerPath: 'cryptoCoinApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://min-api.cryptocompare.com/data/' }),
   endpoints: (builder) => ({
     getCoins: builder.query<ICoinsTransformed[], void>({
       query: () => 'top/mktcapfull?limit=35&tsym=USD',
-      transformResponse: (response: { Data: Coin[] }) => {
+      transformResponse: (response: { Data: ICoin[] }) => {
         return response.Data.map((coin) => ({
           name: coin.CoinInfo.Name,
           fullName: coin.CoinInfo.FullName,
@@ -41,4 +41,4 @@ export const cryptoApi = createApi({
   }),
 });
 
-export const { useGetCoinsQuery } = cryptoApi;
+export const { useGetCoinsQuery } = cryptoCoinApi;

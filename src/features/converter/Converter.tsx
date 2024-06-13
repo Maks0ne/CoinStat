@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from "react";
-import { useGetCoinsQuery, ICoinsTransformed } from "../../api/useCryptoApi";
+import { useGetCoinsQuery, ICoinsTransformed } from "../../api/cryptoCoinsApi";
 import { ArrowLeftRight } from "lucide-react";
 import Spinner from "../../components/spinner/Spinner";
 import ErrorPage from "../../components/error/ErrorPage";

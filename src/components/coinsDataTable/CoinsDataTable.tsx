@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { useGetCoinsQuery, ICoinsTransformed } from '../../api/useCryptoApi'
+import { useGetCoinsQuery, ICoinsTransformed } from '../../api/cryptoCoinsApi'
 import Spinner from "../spinner/Spinner";
 import ErrorPage from "../error/ErrorPage";
 import './coinsDataTable.scss';

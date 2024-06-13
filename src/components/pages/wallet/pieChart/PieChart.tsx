@@ -1,23 +1,17 @@
 import { FC } from "react";
+import { useSelector } from 'react-redux';
+import { RootState } from "../../../../store/store";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from 'react-chartjs-2';
-import { ICoinsTransformed } from '../../../../api/useCryptoApi'
 
 import './pieChart.scss'
 
-interface IWallet {
-  coin: ICoinsTransformed;
-  amount: number
-}
-
-interface IWalletHistoryProps {
-  wallet: IWallet[];
-}
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const PieChart: FC<IWalletHistoryProps> = ({ wallet }) => {
-  const labels = wallet.map(item => item.coin.fullName);
-  const dataValues = wallet.map(item => item.amount);
+const PieChart: FC = () => {
+  const walletResult = useSelector((state: RootState) => state.wallet.walletResult);
+  const labels = walletResult.map(item => item.coin.fullName);
+  const dataValues = walletResult.map(item => item.amount);
 
   const data = {
     labels,
@@ -39,7 +33,7 @@ const PieChart: FC<IWalletHistoryProps> = ({ wallet }) => {
 
   return (
     <div className="pieChart">
-      <Pie data={data} />
+      <Pie data={data}/>
     </div>
   )
 }
