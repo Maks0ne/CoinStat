@@ -13,6 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@firebase/firestore": "^4.6.3",
     "@reduxjs/toolkit": "^2.2.5",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
@@ -30,6 +31,7 @@
     "styled-components": "^6.1.11"
   },
   "devDependencies": {
+    "@firebase/firestore-types": "^3.0.2",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@types/react-slick": "^0.23.13",

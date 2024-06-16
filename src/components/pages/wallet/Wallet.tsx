@@ -1,13 +1,17 @@
 import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
-import { addCoinToWallet, removeCoinFromWallet } from "../../../store/walletSlice";
+import { RootState, AppDispatch } from '../../../store/store';
+import { addCoinToWallet, removeCoinFromWallet } from "../../../store/walletThunks";
 import { useGetCoinsQuery, ICoinsTransformed } from '../../../api/cryptoCoinsApi'
+import { auth } from '../../../config/firebaseConfig'
+import { onAuthStateChanged } from "firebase/auth";
 import { MoveUp } from 'lucide-react';
 import { MoveDown } from 'lucide-react';
 import PieChart from "./pieChart/PieChart";
 import Spinner from "../../spinner/Spinner";
 import ErrorPage from "../../error/ErrorPage";
+import RegisterForm from "../../authorizationForm/RegisterForm";
+import LoginForm from "../../loginForn/LoginForm";
 
 import './wallet.scss'
 
@@ -17,7 +21,7 @@ interface ISelectedCoin extends ICoinsTransformed {
 
 const Wallet: FC = () => {
   const { data, error, isLoading } = useGetCoinsQuery();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const walletResult = useSelector((state: RootState) => state.wallet.walletResult);
   const [coins, setCoins] = useState<ICoinsTransformed[]>([]);
   const [selectedCoin, setSelectedCoin] = useState<ISelectedCoin | null>(null);
@@ -28,10 +32,22 @@ const Wallet: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isSellModalOpen, setIsSellModalOpen] = useState<boolean>(false);
   const [selectedSellCoin, setSelectedSellCoin] = useState<ISelectedCoin | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
-  useEffect(() => {    // Transform fetched data when it changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        setUserId(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
     if (data) {
-      setCoins(data)
+      setCoins(data);
     }
   }, [data]);
 
@@ -56,24 +72,19 @@ const Wallet: FC = () => {
   }
 
   const resultPurchase = () => {
-    if (selectedCoin) {
-      setPurchaseResult(inputValue);
-    }
-
-    if (selectedCoin && inputValue > 0) {
-      dispatch(addCoinToWallet({ coin: selectedCoin, amount: inputValue }));
-      setValidation(false);
+    if (selectedCoin && userId) {
+      dispatch(addCoinToWallet({ userId, coin: selectedCoin, amount: inputValue }));
+      setPurchaseResult(inputValue)
       setIsModalOpen(false);
       setIsSuccsessModalOpen(true);
-    } else {
-      setValidation(true);
     }
   };
 
-  // Handle selling of a cryptocurrency by updating the wallet and opening the modal with sale details
   const handleSell = (coinName: string, amount: number) => {
-    dispatch(removeCoinFromWallet({ coinName }));
-    openSellModal(coinName, amount);
+    if (userId) {
+      dispatch(removeCoinFromWallet({ userId, coinName }));
+      openSellModal(coinName, amount);
+    }
   };
 
   const openSellModal = (coinName: string, amount: number) => {
@@ -83,7 +94,7 @@ const Wallet: FC = () => {
       setIsSellModalOpen(true);
     }
   }
-
+  const test = true
   return (
     <div className="wallet-content" >
       {error && <ErrorPage />}
@@ -91,6 +102,7 @@ const Wallet: FC = () => {
 
       {/* Div for BG blur and closing the modal from the outside */}
 
+      {!test ? <LoginForm /> : <>
         <div className={(isModalOpen || isSuccsessModalOpen || isSellModalOpen) ? 'modal-overlay' : ''} onClick={() => (isModalOpen || isSuccsessModalOpen || isSellModalOpen) && closeModal()} >
           <div className="wallet-container">
             <div>
@@ -187,6 +199,7 @@ const Wallet: FC = () => {
 
           </div>
         )}
+      </>}
     </div>
   )
 }

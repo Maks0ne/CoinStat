@@ -1,8 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { setupListeners } from '@reduxjs/toolkit/query';
 import { cryptoCoinApi } from '../api/cryptoCoinsApi';
 import walletReducer from './walletSlice'
-
 
 export const store = configureStore({
   reducer: {
@@ -13,9 +11,6 @@ export const store = configureStore({
     getDefaultMiddleware().concat(cryptoCoinApi.middleware),
 });
 
-setupListeners(store.dispatch);
-
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-
-export default store;
+export type AppThunk<ReturnType = void> = (dispatch: AppDispatch, getState: () => RootState) => ReturnType;
