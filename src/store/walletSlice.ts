@@ -2,13 +2,13 @@ import { createSlice } from '@reduxjs/toolkit';
 import { addCoinToWallet, removeCoinFromWallet, fetchUserWallet } from './walletThunks';
 import { ICoinsTransformed } from '../api/cryptoCoinsApi';
 
-interface IWallet {
+interface IWalletItem {
   coin: ICoinsTransformed;
   amount: number;
 }
 
 interface IWalletState {
-  walletResult: IWallet[];
+  walletResult: IWalletItem[];
 }
 
 const initialState: IWalletState = {

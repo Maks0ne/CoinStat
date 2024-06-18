@@ -1,8 +1,8 @@
 import { FC, useState, useEffect } from "react";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../config/firebaseConfig";
-import RegisterForm from "../../registerForm/RegisterForm";
-import LoginForm from "../../loginForn/LoginForm";
+import RegistrationForm from "../../registrationForm/RegistrationForm";
+import LoginForm from "../../loginForm/LoginForm";
 
 import './authorization.scss'
 
@@ -64,7 +64,7 @@ const Authorization: FC = () => {
         </div>
       )}
       {isLoginModalOpen && <LoginForm onClose={handleLoginModalClose} />}
-      {isRegistrationModalOpen && <RegisterForm onClose={handleRegistrationModalClose} />}
+      {isRegistrationModalOpen && <RegistrationForm onClose={handleRegistrationModalClose} />}
     </div>
   );
 }

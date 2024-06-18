@@ -4,17 +4,17 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../config/firebaseConfig';
 import { FirebaseError } from 'firebase/app';
 
-import './registerForm.scss';
+import './registrationForm.scss';
 
 interface IFormInput {
   email: string;
   password: string;
 }
 
-interface IRegisterFormProps {
+interface IRegistrationFormProps {
   onClose: () => void;
 }
-const RegisterForm: FC<IRegisterFormProps> = ({ onClose }) => {
+const RegistrationForm: FC<IRegistrationFormProps> = ({ onClose }) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<IFormInput>();
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +39,7 @@ const RegisterForm: FC<IRegisterFormProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="register-form">
+    <div className="registration-form">
       <form className={isSuccessModalOpen ? 'modal-overlay' : ''} onSubmit={handleSubmit(onSubmit)}>
         <label>Name:</label>
         <input
@@ -55,7 +55,7 @@ const RegisterForm: FC<IRegisterFormProps> = ({ onClose }) => {
           {...register('password', { required: true })}
         />
         {errors.password && <p>Password is required</p>}
-        <button className='submit-btn' type="submit">Register</button>
+        <button className='submit-btn' type="submit">Registratrion</button>
         <button className='button-close' onClick={onClose}>Close</button>
         {error && <p>{error}</p>}
 
@@ -71,4 +71,4 @@ const RegisterForm: FC<IRegisterFormProps> = ({ onClose }) => {
   );
 }
 
-export default RegisterForm;
+export default RegistrationForm;

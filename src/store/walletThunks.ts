@@ -3,18 +3,23 @@ import { doc, setDoc, getDoc, updateDoc, deleteDoc, collection, getDocs } from "
 import { db, auth } from "../config/firebaseConfig";
 import { ICoinsTransformed } from "../api/cryptoCoinsApi";
 
-interface AddCoinPayload {
+interface IFetchUserWalletResponse {
+  coin: ICoinsTransformed;
+  amount: number;
+}
+
+interface IAddCoinPayload {
   userId: string;
   coin: ICoinsTransformed;
   amount: number;
 }
 
-interface RemoveCoinPayload {
+interface IRemoveCoinPayload {
   userId: string;
   coinName: string;
 }
 
-export const fetchUserWallet = createAsyncThunk(
+export const fetchUserWallet = createAsyncThunk<IFetchUserWalletResponse[], string>(
   'wallet/fetchUserWallet',
   async (userId: string) => {
     const coinsRef = collection(db, 'users', userId, 'wallet');
@@ -31,7 +36,7 @@ export const fetchUserWallet = createAsyncThunk(
 
 export const addCoinToWallet = createAsyncThunk(
   'wallet/addCoin',
-  async ({ userId, coin, amount }: AddCoinPayload) => {
+  async ({ userId, coin, amount }: IAddCoinPayload) => {
     const user = auth.currentUser;
     if (!user) {
       throw new Error('User not authenticated');
@@ -53,7 +58,7 @@ export const addCoinToWallet = createAsyncThunk(
 
 export const removeCoinFromWallet = createAsyncThunk(
   'wallet/removeCoin',
-  async ({ userId, coinName }: RemoveCoinPayload) => {
+  async ({ userId, coinName }: IRemoveCoinPayload) => {
     const user = auth.currentUser;
     if (!user) {
       throw new Error('User not authenticated');
