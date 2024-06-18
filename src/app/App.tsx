@@ -10,6 +10,7 @@ const MainPage = lazy(() => import('../components/pages/mainPage/MainPage.tsx'))
 const CryptoConverter = lazy(() => import('../components/pages/cryptoConverter/CryptoConverter.tsx'))
 const News = lazy(() => import('../components/pages/news/News.tsx'))
 const Wallet = lazy(() => import('../components/pages/wallet/Wallet.tsx'))
+const Authorization = lazy(() => import('../components/pages/authorization/Authorization.tsx'))
 
 import './app.scss'
 
@@ -25,6 +26,7 @@ const App: FC = () => {
                 <Route path='/converter' element={<CryptoConverter />} />
                 <Route path='/news' element={<News />} />
                 <Route path='/wallet' element={<Wallet />} />
+                <Route path='/authorization' element={<Authorization />} />
               </Route>
               <Route path='*' element={<Page404 />} />
             </Routes>

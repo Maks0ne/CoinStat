@@ -8,6 +8,6 @@ const Spinner = () => {
       <img src={spinnerIcon} alt="Spinner" />
     </div>
   )
-}
+};
 
 export default Spinner

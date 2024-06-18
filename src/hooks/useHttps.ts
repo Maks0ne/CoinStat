@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
-
 interface FetchHookResponse<T> {
   data: T | null;
   loading: boolean;

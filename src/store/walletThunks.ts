@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { doc, setDoc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc, deleteDoc, collection, getDocs } from "firebase/firestore";
 import { db, auth } from "../config/firebaseConfig";
 import { ICoinsTransformed } from "../api/cryptoCoinsApi";
 
@@ -14,6 +14,21 @@ interface RemoveCoinPayload {
   coinName: string;
 }
 
+export const fetchUserWallet = createAsyncThunk(
+  'wallet/fetchUserWallet',
+  async (userId: string) => {
+    const coinsRef = collection(db, 'users', userId, 'wallet');
+    const querySnapshot = await getDocs(coinsRef);
+    const userWalletData: { coin: ICoinsTransformed; amount: number }[] = [];
+    querySnapshot.forEach((doc) => {
+      const coinData = doc.data() as ICoinsTransformed;
+      const amount = doc.data().amount;
+      userWalletData.push({ coin: coinData, amount });
+    });
+    return userWalletData;
+  }
+);
+
 export const addCoinToWallet = createAsyncThunk(
   'wallet/addCoin',
   async ({ userId, coin, amount }: AddCoinPayload) => {
@@ -26,31 +41,23 @@ export const addCoinToWallet = createAsyncThunk(
     const coinDoc = await getDoc(coinRef);
 
     if (coinDoc.exists()) {
-      // Если документ существует, обновляем его
       await updateDoc(coinRef, {
         amount: coinDoc.data().amount + amount
       });
     } else {
-      // Если документ не существует, создаем новый
       await setDoc(coinRef, { ...coin, amount });
     }
-
     return { coin, amount };
   }
 );
 
-interface RemoveCoinPayload {
-  coinName: string;
-}
-
 export const removeCoinFromWallet = createAsyncThunk(
   'wallet/removeCoin',
-  async ({ coinName }: RemoveCoinPayload) => {
+  async ({ userId, coinName }: RemoveCoinPayload) => {
     const user = auth.currentUser;
     if (!user) {
       throw new Error('User not authenticated');
     }
-    const userId = user.uid;
     const coinRef = doc(db, 'users', userId, 'wallet', coinName);
     await deleteDoc(coinRef);
     return { coinName };

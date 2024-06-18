@@ -15,6 +15,10 @@
   z-index: 5;
   padding: 20px;
 
+  @media(max-width: 1200px) {
+    width: 70vw;
+  }
+
   .modal-overlay {
     width: 100%;
     height: 100%;
@@ -37,6 +41,10 @@
       border: 1px solid rgb(180, 197, 216);
       border-radius: 12px;
       color: rgb(180, 197, 216);
+
+      @media(max-width: 1200px) {
+        width: 50vw;
+      }
     }
 
     .login-btn {
@@ -56,7 +64,7 @@
       }
     }
 
-    x select {
+    select {
       cursor: pointer;
     }
   }
@@ -94,5 +102,41 @@
     @media(max-width: 900px) {
       width: 90vw;
     }
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+  }
+
+  .close-btn:before,
+  .close-btn:after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 24px;
+    background-color: rgb(180, 197, 216)
+  }
+
+  .close-btn:before {
+    transform: rotate(45deg);
+  }
+
+  .close-btn:after {
+    transform: rotate(-45deg);
+  }
+
+  .button-close {
+    background-color: transparent;
+    cursor: pointer;
   }
 }

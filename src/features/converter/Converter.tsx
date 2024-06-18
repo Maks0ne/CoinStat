@@ -30,27 +30,34 @@ const Converter: FC = () => {
     }
   }, [data]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {  //getting data from input
+  //getting data from input
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(+e.target.value)
   }
-  const handleFirstSelectorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {  //getting data from selector
+
+  //getting data from selector
+  const handleFirstSelectorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFirstSelector(+e.target.value)
     setFirstSelectorName(e.target.selectedOptions[0].text)
 
   }
-  const handleSecondSelectorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {   //getting data from selector
+
+  //getting data from selector
+  const handleSecondSelectorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSecondSelector(+e.target.value)
     setSecondSelectorName(e.target.selectedOptions[0].text)
   }
 
+  //calculation and rounding of result
   useEffect(() => {
     if (firstSelector && secondSelector && inputValue) {
       const convertedValue = Math.round(((inputValue * firstSelector) / secondSelector) * 100000) / 100000
-      setResult(convertedValue)          //calculation and rounding of result
+      setResult(convertedValue)
     }
   }, [inputValue, firstSelector, secondSelector])
 
-  const swapSelectors = () => {   //func to replace values of selectors for a button
+  //func to replace values of selectors for a button
+  const swapSelectors = () => {
     setFirstSelector(secondSelector);
     setSecondSelector(firstSelector);
     setFirstSelectorName(secondSelectorName);
