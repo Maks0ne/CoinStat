@@ -18,9 +18,10 @@ interface ISelectedCoin extends ICoinsTransformed {
 }
 
 const Wallet: FC = () => {
-  const { data, error, isLoading } = useGetCoinsQuery();
+  const { data, error, isLoading, refetch } = useGetCoinsQuery();
   const dispatch = useDispatch<AppDispatch>();
   const walletResult = useSelector((state: RootState) => state.wallet.walletResult);
+  const [totalWalletAmount, setTotalWalletAmount] = useState<number>(0)
   const [coins, setCoins] = useState<ICoinsTransformed[]>([]);
   const [selectedCoin, setSelectedCoin] = useState<ISelectedCoin | null>(null);
   const [inputValue, setInputValue] = useState<number>(0)
@@ -55,6 +56,28 @@ const Wallet: FC = () => {
       setCoins(data);
     }
   }, [data]);
+
+  useEffect(() => {
+    const interval = setInterval(refetch, 30000);
+    return () => clearInterval(interval);
+  }, [refetch]);
+
+  //Calculating Total Portfolio Value
+  useEffect(() => {
+    if (!walletResult || !coins) {
+      setTotalWalletAmount(0);
+      return;
+    }
+    const total = walletResult.reduce((sum, walletItem) => {
+      const coin = coins.find(c => c.name === walletItem.coin.name);
+      if (coin) {
+        return sum + coin.price * walletItem.amount;
+      }
+      return sum;
+    }, 0);
+
+    setTotalWalletAmount(total);
+  }, [walletResult, coins]);
 
   // Handle coin selection change
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -155,6 +178,7 @@ const Wallet: FC = () => {
               {/* Purchase list */}
               <div className="wallet-list">
                 <h3>Your wallet</h3>
+                <p className="wallet-amount">{totalWalletAmount > 0 ? ` Total amount of your wallet: ${totalWalletAmount.toFixed(2) }USD` : null}</p>
                 {walletResult.map(item => (
                   <div className="wallet-list-item" key={item.coin.name}>
                     <img src={item.coin.imageUrl} alt={item.coin.fullName} />
