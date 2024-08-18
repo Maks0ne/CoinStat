@@ -6,8 +6,8 @@ interface ICoin {
     FullName: string;
     ImageUrl: string;
   };
-  RAW: {
-    USD: {
+  RAW?: {
+    USD?: {
       PRICE: number;
       CHANGE24HOUR: number;
     };
@@ -29,12 +29,14 @@ export const cryptoCoinApi = createApi({
     getCoins: builder.query<ICoinsTransformed[], void>({
       query: () => 'top/mktcapfull?limit=35&tsym=USD',
       transformResponse: (response: { Data: ICoin[] }) => {
-        return response.Data.map((coin) => ({
+        return response.Data
+        .filter(coin => coin.RAW?.USD)
+        .map((coin) => ({
           name: coin.CoinInfo.Name,
           fullName: coin.CoinInfo.FullName,
           imageUrl: `https://www.cryptocompare.com${coin.CoinInfo.ImageUrl}`,
-          price: +coin.RAW.USD.PRICE,
-          change24hour: coin.RAW.USD.CHANGE24HOUR,
+          price: coin.RAW!.USD!.PRICE,
+          change24hour: coin.RAW!.USD!.CHANGE24HOUR,
         }));
       },
     }),

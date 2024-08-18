@@ -7,11 +7,11 @@ import './header.scss'
 const Header: FC = () => {
   return (
     <div className="header">
-      <Link to={'/'}><p>Home</p></Link>
-      <Link to={'/converter'}><p>Converter</p></Link>
-      <Link to={'/news'}><p>News</p></Link>
-      <Link to={'/wallet'}><p>Wallet</p></Link>
-      <Link to={'/authorization'}><p><CircleUser className="login-icon" /></p></Link>
+      <Link to={'/'} aria-label="Home"><p>Home</p></Link>
+      <Link to={'/converter'} aria-label="Converter"><p>Converter</p></Link>
+      <Link to={'/news'} aria-label="News"><p>News</p></Link>
+      <Link to={'/wallet'} aria-label="Wallet"><p>Wallet</p></Link>
+      <Link to={'/authorization'} aria-label="Authorization"><p><CircleUser className="login-icon" /></p></Link>
     </div>
   )
 }

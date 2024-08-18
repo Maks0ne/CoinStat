@@ -144,7 +144,7 @@ const Wallet: FC = () => {
               <div>
 
                 {/* Coin Select*/}
-                <select className="coin-select" onChange={handleSelectChange}>
+                <select className="coin-select" aria-label="Coin selector" onChange={handleSelectChange}>
                   <option>Open / Close</option>
 
                   {coins.map((coin) => (

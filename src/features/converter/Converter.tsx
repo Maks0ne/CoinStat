@@ -85,7 +85,7 @@ const Converter: FC = () => {
 
           <button className="toggleBtn" onClick={swapSelectors}><ArrowLeftRight /></button>
 
-          <select className="coin-selector" value={secondSelector} onChange={handleSecondSelectorChange}>
+          <select className="coin-selector" value={secondSelector} onChange={handleSecondSelectorChange} aria-label="Coin selector">
 
             {coins.map((coin) => (
               <option key={coin.name} value={coin.price}>{coin.name}</option>
